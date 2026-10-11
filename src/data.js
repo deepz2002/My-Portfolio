@@ -8,7 +8,7 @@ export const profile = {
   location: 'Bengaluru, India',
   email: '25.deepakanand@gmail.com',
   github: 'https://github.com/deepz2002',
-  linkedin: 'https://www.linkedin.com/in/deepak-anand-1a49621b0/',
+  linkedin: 'https://www.linkedin.com/in/deepak-anand25',
   intro:
     "I don't just build models — I build systems that think, reason and deliver value. From NL-to-SQL agents and Multi-Model RAG to an AI product on the Atlassian Marketplace, I take ideas from problem statement to production.",
   typed: [
