@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Full-Stack AI Engineer — Portfolio</title>
+<meta name="description" content="Full-Stack AI Engineer building ideas into production-ready products." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: { extend: { fontFamily: { mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'], sans: ['Inter', 'system-ui', 'sans-serif'] } } }
+  };
+</script>
+<style>
+  /* ---------- Theme tokens (terminal dark / paper light) ---------- */
+  :root {
+    --bg: #f4f6f1; --veil: 244 246 241; --surface: rgba(255,255,255,.78); --surface-solid: #ffffff;
+    --text: #17201a; --muted: #55635a; --line: rgba(23,32,26,.14);
+    --accent: #0b7a47; --accent-2: #4f46e5; --rain: 11 122 71; --glow: rgba(11,122,71,.18);
+  }
+  .dark {
+    --bg: #070b08; --veil: 7 11 8; --surface: rgba(10,18,12,.72); --surface-solid: #0b140e;
+    --text: #d7f5e2; --muted: #86a392; --line: rgba(0,255,156,.18);
+    --accent: #00ff9c; --accent-2: #8b9cff; --rain: 0 255 156; --glow: rgba(0,255,156,.16);
+  }
+  html { scroll-behavior: smooth; scroll-snap-type: y proximity; background: var(--bg); }
+  @media (min-width: 768px) and (min-height: 640px) { html { scroll-snap-type: y mandatory; } }
+  body { background: transparent; color: var(--text); font-family: Inter, system-ui, sans-serif; transition: color .3s; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  #rain { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  /* soft veil keeps text readable over the binary rain */
+  #veil { position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 45%, rgb(var(--veil) / .82) 0%, rgb(var(--veil) / .55) 55%, rgb(var(--veil) / .15) 100%); }
+
+  /* ---------- Full-screen sections ---------- */
+  .snap { position: relative; z-index: 2; min-height: 100svh; scroll-snap-align: start; scroll-snap-stop: normal;
+    display: flex; align-items: center; padding: 5.5rem 1rem 3rem; }
+  @media (min-width: 640px) { .snap { padding: 6rem 2rem 3rem; } }
+  .wrap { width: 100%; max-width: 72rem; margin: 0 auto; }
+
+  /* Apple-style reveal: content rises + scales in as its screen takes over */
+  .reveal { opacity: 0; transform: translateY(36px) scale(.97); filter: blur(6px);
+    transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1), filter .8s; transition-delay: var(--d, 0s); }
+  .snap.in .reveal { opacity: 1; transform: none; filter: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; filter: none; transition: none; } html { scroll-behavior: auto; } }
+
+  /* ---------- Terminal-window card ---------- */
+  .term { background: var(--surface); border: 1px solid var(--line); border-radius: .9rem; backdrop-filter: blur(10px);
+    box-shadow: 0 0 0 1px transparent, 0 18px 50px -24px var(--glow); transition: transform .3s, border-color .3s, box-shadow .3s; overflow: hidden; }
+  .term:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 18px 60px -20px var(--glow); }
+  .term-bar { display: flex; align-items: center; gap: .4rem; padding: .55rem .8rem; border-bottom: 1px solid var(--line); font-size: .72rem; color: var(--muted); }
+  .dot { width: .6rem; height: .6rem; border-radius: 9999px; display: inline-block; }
+  .accent { color: var(--accent); } .muted { color: var(--muted); }
+  .chip { border: 1px solid var(--line); border-radius: .4rem; padding: .15rem .55rem; font-size: .72rem; color: var(--muted); }
+  .btn { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--accent); color: var(--accent); padding: .65rem 1.1rem;
+    border-radius: .5rem; font-family: "JetBrains Mono", monospace; font-size: .85rem; transition: .25s; background: transparent; }
+  .btn:hover, .btn.solid { background: var(--accent); color: var(--bg); }
+  .btn.solid:hover { filter: brightness(1.1); }
+  h2.title { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: clamp(1.7rem, 4.5vw, 3rem); line-height: 1.1; letter-spacing: -.02em; }
+  .cursor::after { content: "▍"; color: var(--accent); animation: blink 1s steps(1) infinite; margin-left: 2px; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- Pipeline (image concept) ---------- */
+  .blob { width: 5.5rem; height: 5.5rem; border-radius: 42% 58% 55% 45% / 50% 45% 55% 50%; display: grid; place-items: center;
+    background: color-mix(in srgb, var(--c) 18%, transparent); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); transition: transform .3s; }
+  .step:hover .blob { transform: scale(1.1) rotate(-4deg); }
+  .blob svg { width: 2.6rem; height: 2.6rem; stroke: var(--c); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .arrow { color: var(--muted); flex: none; }
+  .loop-path { stroke-dasharray: 6 6; animation: dash 1.6s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -24; } }
+
+  /* ---------- Side dots + nav ---------- */
+  #dots a { display: block; width: .55rem; height: .55rem; border-radius: 9999px; border: 1px solid var(--accent); margin: .7rem 0; transition: .25s; }
+  #dots a.active { background: var(--accent); transform: scale(1.5); }
+  .navlink { position: relative; color: var(--muted); transition: color .2s; }
+  .navlink:hover, .navlink.active { color: var(--accent); }
+  ::selection { background: var(--accent); color: var(--bg); }
+</style>
+</head>
+
+<body class="antialiased">
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="veil" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<header class="fixed top-0 inset-x-0 z-50 border-b" style="border-color:var(--line);background:rgb(var(--veil)/.7);backdrop-filter:blur(12px)">
+  <nav class="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-8 h-14 mono text-sm">
+    <a href="#home" class="font-bold accent">&gt;_ <span style="color:var(--text)">your.name</span></a>
+    <div class="hidden lg:flex items-center gap-7" id="navlinks">
+      <a class="navlink" href="#about">About</a>
+      <a class="navlink" href="#experience">Experience</a>
+      <a class="navlink" href="#projects">Projects</a>
+      <a class="navlink" href="#clients">Clients</a>
+      <a class="navlink" href="#stack">Stack</a>
+      <a class="navlink" href="#deck">My Deck</a>
+      <a class="navlink" href="#contact">Contact</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="theme" class="chip hover:border-[color:var(--accent)] py-1.5" aria-label="Toggle theme"><span id="themeLabel">☾ dark</span></button>
+      <button id="menuBtn" class="lg:hidden chip py-1.5" aria-label="Menu" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+  <div id="menu" class="hidden lg:hidden mono text-sm px-4 pb-4 grid grid-cols-2 gap-2">
+    <a class="chip" href="#about">About</a><a class="chip" href="#experience">Experience</a>
+    <a class="chip" href="#projects">Projects</a><a class="chip" href="#clients">Clients</a>
+    <a class="chip" href="#stack">Stack</a><a class="chip" href="#deck">My Deck</a>
+    <a class="chip" href="#contact">Contact</a>
+  </div>
+</header>
+
+<!-- section progress dots -->
+<aside id="dots" class="hidden md:block fixed right-5 top-1/2 -translate-y-1/2 z-40" aria-label="Section progress"></aside>
+
+<main>
+
+<!-- ============ 01 HERO ============ -->
+<section id="home" class="snap" data-label="Home">
+  <div class="wrap grid lg:grid-cols-5 gap-10 items-center">
+    <div class="lg:col-span-3">
+      <p class="reveal mono text-sm accent" style="--d:.05s">$ whoami</p>
+      <h1 class="reveal mono font-bold mt-3 leading-tight" style="--d:.15s;font-size:clamp(2rem,6vw,4rem);letter-spacing:-.03em">
+        Full-Stack <span class="accent">AI Engineer</span>
+      </h1>
+      <p class="reveal mono mt-4 text-lg sm:text-xl min-h-[2.5rem]" style="--d:.25s"><span id="typed" class="cursor"></span></p>
+      <p class="reveal mt-5 max-w-xl muted" style="--d:.35s">
+        Building ideas into production-ready products. [One-line intro — to be filled in.]
+      </p>
+      <div class="reveal flex flex-wrap gap-3 mt-8" style="--d:.45s">
+        <a href="#projects" class="btn solid">Explore Projects →</a>
+        <a href="#deck" class="btn">View My Deck ↗</a>
+        <a href="#" class="btn">Resume ↓</a>
+      </div>
+    </div>
+
+    <!-- pipeline mini terminal -->
+    <div class="reveal lg:col-span-2" style="--d:.3s">
+      <div class="term mono text-sm">
+        <div class="term-bar"><span class="dot bg-red-500"></span><span class="dot bg-yellow-400"></span><span class="dot bg-green-500"></span><span class="ml-2">pipeline.sh</span></div>
+        <div class="p-4 space-y-1.5">
+          <p><span class="accent">✔</span> problem <span class="muted">→ understood</span></p>
+          <p><span class="accent">✔</span> poc <span class="muted">→ validated</span></p>
+          <p><span class="accent">✔</span> mvp <span class="muted">→ shipped</span></p>
+          <p><span class="accent">✔</span> production <span class="muted">→ deployed</span></p>
+          <p class="muted">▸ learn · improve · repeat<span class="cursor"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 PHILOSOPHY + SNAPSHOT ============ -->
+<section id="philosophy" class="snap" data-label="Philosophy">
+  <div class="wrap text-center">
+    <p class="reveal mono text-sm accent">// engineering philosophy</p>
+    <h2 class="reveal title mt-4" style="--d:.1s">I drive AI.<br /><span class="muted">AI doesn't drive me.</span></h2>
+    <div class="grid sm:grid-cols-3 gap-4 mt-10 text-left">
+      <div class="reveal term p-5" style="--d:.2s"><p class="mono accent text-sm">01</p><h3 class="mono font-bold mt-2">Logic First</h3><p class="muted text-sm mt-1">Problem-solving over syntax. [short line]</p></div>
+      <div class="reveal term p-5" style="--d:.3s"><p class="mono accent text-sm">02</p><h3 class="mono font-bold mt-2">Right Tools</h3><p class="muted text-sm mt-1">Pick the tool that fits the problem. [short line]</p></div>
+      <div class="reveal term p-5" style="--d:.4s"><p class="mono accent text-sm">03</p><h3 class="mono font-bold mt-2">Human in the Loop</h3><p class="muted text-sm mt-1">AI accelerates; I validate. [short line]</p></div>
+    </div>
+    <div class="reveal grid grid-cols-2 md:grid-cols-4 gap-4 mt-8" style="--d:.5s">
+      <div><p class="mono text-3xl font-bold accent">3+</p><p class="muted text-xs mono">yrs software eng.</p></div>
+      <div><p class="mono text-3xl font-bold accent">2+</p><p class="muted text-xs mono">yrs AI eng.</p></div>
+      <div><p class="mono text-3xl font-bold accent">E2E</p><p class="muted text-xs mono">product ownership</p></div>
+      <div><p class="mono text-3xl font-bold accent">Prod</p><p class="muted text-xs mono">&amp; marketplace deploys</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 PROCESS (the image idea) ============ -->
+<section id="process" class="snap" data-label="Process">
+  <div class="wrap">
+    <div class="text-center">
+      <p class="reveal mono text-sm accent">// how i build products</p>
+      <h2 class="reveal title mt-3" style="--d:.1s">Problem → Impact, on repeat.</h2>
+    </div>
+
+    <!-- steps -->
+    <div class="mt-12 flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6 lg:gap-2">
+
+      <div class="step reveal text-center w-56" style="--d:.15s;--c:#fb7a5c">
+        <div class="blob mx-auto"><svg viewBox="0 0 48 48"><path d="M10 6h20l8 8v12M10 6v36h14"/><path d="M16 18h14M16 25h10"/><circle cx="36" cy="37" r="8" fill="#fb7a5c22"/><path d="M34 35a2 2 0 1 1 3 1.7c-.7.4-1 .8-1 1.5M36 41v.2"/></svg></div>
+        <h3 class="mono font-bold mt-3">Problem</h3><p class="muted text-sm">Understand<br />real-world needs</p>
+      </div>
+      <svg class="arrow hidden lg:block mt-10" width="56" height="16" viewBox="0 0 56 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h52M46 2l8 6-8 6"/></svg>
+      <svg class="arrow lg:hidden" width="16" height="32" viewBox="0 0 16 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 0v28M2 22l6 8 6-8"/></svg>
+
+      <div class="step reveal text-center w-56" style="--d:.3s;--c:#38a8d8">
+        <div class="blob mx-auto"><svg viewBox="0 0 48 48"><path d="M24 8v32M24 12c-5-5-14-2-14 6 0 3 1 4 3 5-2 2-2 6 1 8 2 2 5 2 7 0M24 12c5-5 14-2 14 6 0 3-1 4-3 5 2 2 2 6-1 8-2 2-5 2-7 0"/><path d="M17 20h4M27 20h4M17 29h4M27 29h4"/></svg></div>
+        <h3 class="mono font-bold mt-3">AI / ML</h3><p class="muted text-sm">Analyze<br />Reason<br />Generate</p>
+      </div>
+      <svg class="arrow hidden lg:block mt-10" width="56" height="16" viewBox="0 0 56 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h52M46 2l8 6-8 6"/></svg>
+      <svg class="arrow lg:hidden" width="16" height="32" viewBox="0 0 16 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 0v28M2 22l6 8 6-8"/></svg>
+
+      <div class="step reveal text-center w-56" style="--d:.45s;--c:#8b7cf0">
+        <div class="blob mx-auto"><svg viewBox="0 0 48 48"><circle cx="24" cy="16" r="8"/><path d="M8 42c0-9 7-14 16-14s16 5 16 14z"/></svg></div>
+        <h3 class="mono font-bold mt-3">Build</h3><p class="muted text-sm">Human in the loop<br />Validate<br />Iterate</p>
+      </div>
+      <svg class="arrow hidden lg:block mt-10" width="56" height="16" viewBox="0 0 56 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h52M46 2l8 6-8 6"/></svg>
+      <svg class="arrow lg:hidden" width="16" height="32" viewBox="0 0 16 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 0v28M2 22l6 8 6-8"/></svg>
+
+      <div class="step reveal text-center w-56" style="--d:.6s;--c:#4cb87a">
+        <div class="blob mx-auto"><svg viewBox="0 0 48 48"><path d="M30 6c8 0 12 4 12 12-5 8-10 12-16 14l-10-10C18 16 22 10 30 6z"/><circle cx="31" cy="17" r="3"/><path d="M16 22l-8 2 4 4M26 32l-2 8-4-4M12 36l-6 6"/></svg></div>
+        <h3 class="mono font-bold mt-3">Deploy</h3><p class="muted text-sm">Scale<br />Monitor<br />Optimize</p>
+      </div>
+      <svg class="arrow hidden lg:block mt-10" width="56" height="16" viewBox="0 0 56 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h52M46 2l8 6-8 6"/></svg>
+      <svg class="arrow lg:hidden" width="16" height="32" viewBox="0 0 16 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 0v28M2 22l6 8 6-8"/></svg>
+
+      <div class="step reveal text-center w-56" style="--d:.75s;--c:#f0a640">
+        <div class="blob mx-auto"><svg viewBox="0 0 48 48"><rect x="7" y="28" width="8" height="14"/><rect x="20" y="20" width="8" height="22"/><rect x="33" y="10" width="8" height="32"/><path d="M30 6h10v8M40 6L32 14" /></svg></div>
+        <h3 class="mono font-bold mt-3">Impact</h3><p class="muted text-sm">Better products<br />Happier users<br />Real-world value</p>
+      </div>
+    </div>
+
+    <!-- feedback loop -->
+    <div class="reveal mt-8 relative" style="--d:.9s">
+      <svg class="hidden lg:block w-full" height="70" viewBox="0 0 1000 70" preserveAspectRatio="none" fill="none">
+        <path class="loop-path" d="M900 4 C 900 70, 700 60, 560 60 M440 60 C 300 60, 100 70, 100 8" stroke="var(--accent)" stroke-width="1.5" opacity=".7"/>
+        <path d="M94 16l6-10 6 10" stroke="var(--accent)" stroke-width="1.5" opacity=".7"/>
+      </svg>
+      <div class="lg:absolute lg:left-1/2 lg:bottom-0 lg:-translate-x-1/2 flex justify-center mt-6 lg:mt-0">
+        <span class="term mono text-sm px-5 py-2 !rounded-full whitespace-nowrap">Learn <span class="accent">·</span> Improve <span class="accent">·</span> Repeat ↻</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 ABOUT ============ -->
+<section id="about" class="snap" data-label="About">
+  <div class="wrap grid lg:grid-cols-2 gap-10 items-center">
+    <div>
+      <p class="reveal mono text-sm accent">// about</p>
+      <h2 class="reveal title mt-3" style="--d:.1s">Engineer first.<br /><span class="muted">AI as an accelerator.</span></h2>
+      <p class="reveal muted mt-5 max-w-lg" style="--d:.2s">[Professional introduction and engineering journey — to be filled in.]</p>
+      <div class="reveal flex flex-wrap gap-2 mt-6" style="--d:.3s">
+        <span class="chip">What I build</span><span class="chip">How I think</span><span class="chip">Engineering journey</span>
+      </div>
+    </div>
+    <div class="reveal term mono text-sm" style="--d:.25s">
+      <div class="term-bar"><span class="dot bg-red-500"></span><span class="dot bg-yellow-400"></span><span class="dot bg-green-500"></span><span class="ml-2">about.json</span></div>
+      <pre class="p-4 overflow-x-auto leading-relaxed"><span class="muted">{</span>
+  <span class="accent">"role"</span>: "Full-Stack AI Engineer",
+  <span class="accent">"builds"</span>: ["AI agents", "RAG", "Web apps", "APIs", "Cloud"],
+  <span class="accent">"approach"</span>: "Problem → POC → MVP → Prod",
+  <span class="accent">"location"</span>: "[city, country]",
+  <span class="accent">"open_to"</span>: "[roles / collaborations]"
+<span class="muted">}</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 EXPERIENCE ============ -->
+<section id="experience" class="snap" data-label="Experience">
+  <div class="wrap">
+    <p class="reveal mono text-sm accent">// experience</p>
+    <h2 class="reveal title mt-3" style="--d:.1s">Career timeline</h2>
+    <div class="relative mt-10 grid md:grid-cols-3 gap-5">
+      <div class="hidden md:block absolute top-[.45rem] left-0 right-0 h-px" style="background:var(--line)"></div>
+      <article class="reveal relative pt-6" style="--d:.2s">
+        <span class="hidden md:block absolute top-0 left-0 w-3 h-3 rounded-full" style="background:var(--accent);box-shadow:0 0 12px var(--accent)"></span>
+        <div class="term p-5"><p class="mono text-xs accent">2025 — Present</p><h3 class="mono font-bold mt-1">[Role] · [Company]</h3><ul class="muted text-sm mt-2 space-y-1 list-disc pl-4"><li>[Contribution]</li><li>[Outcome / impact]</li></ul></div>
+      </article>
+      <article class="reveal relative pt-6" style="--d:.35s">
+        <span class="hidden md:block absolute top-0 left-0 w-3 h-3 rounded-full" style="background:var(--accent)"></span>
+        <div class="term p-5"><p class="mono text-xs accent">2024 — 2025</p><h3 class="mono font-bold mt-1">[Role] · [Company]</h3><ul class="muted text-sm mt-2 space-y-1 list-disc pl-4"><li>[Contribution]</li><li>[Outcome / impact]</li></ul></div>
+      </article>
+      <article class="reveal relative pt-6" style="--d:.5s">
+        <span class="hidden md:block absolute top-0 left-0 w-3 h-3 rounded-full" style="background:var(--accent)"></span>
+        <div class="term p-5"><p class="mono text-xs accent">2022 — 2024</p><h3 class="mono font-bold mt-1">[Role] · [Company]</h3><ul class="muted text-sm mt-2 space-y-1 list-disc pl-4"><li>[Contribution]</li><li>[Outcome / impact]</li></ul></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 PROJECTS (bento) ============ -->
+<section id="projects" class="snap" data-label="Projects">
+  <div class="wrap">
+    <p class="reveal mono text-sm accent">// featured projects</p>
+    <h2 class="reveal title mt-3" style="--d:.1s">Things I've shipped</h2>
+    <div class="grid md:grid-cols-3 gap-4 mt-8">
+      <a href="#" class="reveal term md:col-span-2 md:row-span-2 flex flex-col" style="--d:.2s">
+        <div class="term-bar mono"><span class="dot bg-red-500"></span><span class="dot bg-yellow-400"></span><span class="dot bg-green-500"></span><span class="ml-2">~/projects/ai-agents</span></div>
+        <div class="p-5 flex-1 flex flex-col justify-between gap-6">
+          <div><span class="chip">AI &amp; Agentic</span><h3 class="mono text-xl font-bold mt-3">[Project Name]</h3>
+            <p class="muted text-sm mt-2"><b class="accent">Problem:</b> [..] &nbsp;<b class="accent">Solution:</b> [..] &nbsp;<b class="accent">Impact:</b> [..]</p></div>
+          <div class="flex flex-wrap gap-2"><span class="chip">LLM</span><span class="chip">RAG</span><span class="chip">FastAPI</span><span class="chip">AWS</span></div>
+          <span class="mono text-sm accent">View case study →</span>
+        </div>
+      </a>
+      <a href="#" class="reveal term p-5" style="--d:.3s"><span class="chip">Full-Stack</span><h3 class="mono font-bold mt-3">[Project Name]</h3><p class="muted text-sm mt-1">[Problem → impact]</p><p class="mono text-sm accent mt-4">Case study →</p></a>
+      <a href="#" class="reveal term p-5" style="--d:.4s"><span class="chip">Cloud &amp; DevOps</span><h3 class="mono font-bold mt-3">[Project Name]</h3><p class="muted text-sm mt-1">[Problem → impact]</p><p class="mono text-sm accent mt-4">Case study →</p></a>
+      <a href="#" class="reveal term p-5 md:col-span-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3" style="--d:.5s"><div><span class="chip">Product Engineering</span><h3 class="mono font-bold mt-3">[Project Name]</h3></div><p class="mono text-sm accent">Case study →</p></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 CLIENTS ============ -->
+<section id="clients" class="snap" data-label="Clients">
+  <div class="wrap">
+    <p class="reveal mono text-sm accent">// clients &amp; collaborations</p>
+    <h2 class="reveal title mt-3" style="--d:.1s">Trusted by teams</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+      <div class="reveal term p-5 text-center" style="--d:.15s"><p class="mono font-bold">[Company]</p><p class="muted text-xs mt-1">[Industry]</p></div>
+      <div class="reveal term p-5 text-center" style="--d:.2s"><p class="mono font-bold">[Company]</p><p class="muted text-xs mt-1">[Industry]</p></div>
+      <div class="reveal term p-5 text-center" style="--d:.25s"><p class="mono font-bold">[Company]</p><p class="muted text-xs mt-1">[Industry]</p></div>
+      <div class="reveal term p-5 text-center" style="--d:.3s"><p class="mono font-bold">[Company]</p><p class="muted text-xs mt-1">[Industry]</p></div>
+      <div class="reveal term p-5 text-center" style="--d:.35s"><p class="mono font-bold">[Company]</p><p class="muted text-xs mt-1">[Industry]</p></div>
+      <div class="reveal term p-5 text-center" style="--d:.4s"><p class="mono font-bold">[Company]</p><p class="muted text-xs mt-1">[Industry]</p></div>
+      <div class="reveal term p-5 text-center" style="--d:.45s"><p class="mono font-bold">[Company]</p><p class="muted text-xs mt-1">[Industry]</p></div>
+      <div class="reveal term p-5 text-center" style="--d:.5s"><p class="mono font-bold">[Company]</p><p class="muted text-xs mt-1">[Industry]</p></div>
+    </div>
+    <p class="reveal muted text-sm mt-6 mono" style="--d:.6s">Engagement · business problem solved · delivered value — details per client.</p>
+  </div>
+</section>
+
+<!-- ============ 08 TECH STACK ============ -->
+<section id="stack" class="snap" data-label="Stack">
+  <div class="wrap">
+    <p class="reveal mono text-sm accent">// technical expertise</p>
+    <h2 class="reveal title mt-3" style="--d:.1s">Tech stack</h2>
+    <div class="grid sm:grid-cols-2 gap-4 mt-8">
+      <div class="reveal term" style="--d:.2s"><div class="term-bar mono">$ ls ai-llm/</div><div class="p-4 flex flex-wrap gap-2"><span class="chip">LLMs</span><span class="chip">RAG</span><span class="chip">Agents</span><span class="chip">MCP</span><span class="chip">Evals</span><span class="chip">Guardrails</span></div></div>
+      <div class="reveal term" style="--d:.3s"><div class="term-bar mono">$ ls languages-frameworks/</div><div class="p-4 flex flex-wrap gap-2"><span class="chip">Python</span><span class="chip">TypeScript</span><span class="chip">React</span><span class="chip">Node.js</span><span class="chip">FastAPI</span></div></div>
+      <div class="reveal term" style="--d:.4s"><div class="term-bar mono">$ ls cloud-infra/</div><div class="p-4 flex flex-wrap gap-2"><span class="chip">AWS</span><span class="chip">Azure</span><span class="chip">Docker</span><span class="chip">CI/CD</span><span class="chip">Monitoring</span></div></div>
+      <div class="reveal term" style="--d:.5s"><div class="term-bar mono">$ ls databases-tools/</div><div class="p-4 flex flex-wrap gap-2"><span class="chip">PostgreSQL</span><span class="chip">Vector DBs</span><span class="chip">Redis</span><span class="chip">Git</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 DECK CTA ============ -->
+<section id="deck" class="snap" data-label="My Deck">
+  <div class="wrap text-center">
+    <p class="reveal mono text-sm accent">// go beyond my resume</p>
+    <h2 class="reveal title mt-3" style="--d:.1s">Explore my engineering deck</h2>
+    <p class="reveal muted mt-4 max-w-xl mx-auto" style="--d:.2s">Architecture, decisions, trade-offs and how I solve problems — presented as a full-screen interactive deck.</p>
+    <div class="reveal term mono text-sm text-left max-w-md mx-auto mt-8" style="--d:.3s">
+      <div class="term-bar"><span class="dot bg-red-500"></span><span class="dot bg-yellow-400"></span><span class="dot bg-green-500"></span><span class="ml-2">deck</span></div>
+      <div class="p-4 space-y-1"><p><span class="accent">$</span> open deck --fullscreen</p><p class="muted">11 slides · mindset · architecture · production</p></div>
+    </div>
+    <a href="deck.html" class="reveal btn solid mt-8" style="--d:.4s">OPEN DECK ↗</a>
+  </div>
+</section>
+
+<!-- ============ 10 CONTACT ============ -->
+<section id="contact" class="snap" data-label="Contact">
+  <div class="wrap text-center">
+    <p class="reveal mono text-sm accent">// contact</p>
+    <h2 class="reveal title mt-3" style="--d:.1s">Let's build something<br /><span class="accent">meaningful.</span></h2>
+    <div class="reveal flex flex-wrap justify-center gap-3 mt-8" style="--d:.25s">
+      <a href="mailto:you@example.com" class="btn solid">Email</a>
+      <a href="#" class="btn">LinkedIn ↗</a>
+      <a href="#" class="btn">GitHub ↗</a>
+      <a href="#" class="btn">Resume ↓</a>
+    </div>
+    <p class="reveal mono text-xs muted mt-16" style="--d:.4s">© <span id="year"></span> your.name · built with React &amp; Tailwind</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- theme ---------- */
+  let saved = null; try { saved = localStorage.getItem('theme'); } catch (e) {}
+  const setTheme = (t) => {
+    root.classList.toggle('dark', t === 'dark');
+    $('#themeLabel').textContent = t === 'dark' ? '☾ dark' : '☀ light';
+    try { localStorage.setItem('theme', t); } catch (e) {}
+    readColors();
+  };
+  $('#theme').addEventListener('click', () => setTheme(root.classList.contains('dark') ? 'light' : 'dark'));
+
+  /* ---------- binary rain ---------- */
+  const cv = $('#rain'), ctx = cv.getContext('2d');
+  const size = 16; let cols = 0, drops = [], rgb = '0 255 156', bg = '7,11,8';
+  function readColors() {
+    const cs = getComputedStyle(root);
+    rgb = cs.getPropertyValue('--rain').trim().split(/\s+/).join(',');
+    bg = cs.getPropertyValue('--veil').trim().split(/\s+/).join(',');
+    ctx.fillStyle = `rgb(${bg})`; ctx.fillRect(0, 0, cv.width, cv.height);
+  }
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cols = Math.ceil(innerWidth / size);
+    drops = Array.from({ length: cols }, () => Math.random() * -50);
+    readColors();
+  }
+  let last = 0;
+  function draw(t) {
+    requestAnimationFrame(draw);
+    if (t - last < 55) return; last = t;           // ~18fps: calm, cheap
+    ctx.fillStyle = `rgba(${bg},.12)`; ctx.fillRect(0, 0, innerWidth, innerHeight);
+    ctx.font = `${size}px "JetBrains Mono", monospace`;
+    for (let i = 0; i < cols; i++) {
+      const y = drops[i] * size;
+      ctx.fillStyle = `rgba(${rgb},${Math.random() > .96 ? .95 : .5})`;
+      ctx.fillText(Math.random() > .5 ? '1' : '0', i * size, y);
+      if (y > innerHeight && Math.random() > .975) drops[i] = 0;
+      drops[i] += 1;
+    }
+  }
+  addEventListener('resize', resize);
+  setTheme(saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+  resize();
+  if (reduce) { ctx.fillStyle = `rgba(${rgb},.35)`; ctx.font = `${size}px monospace`;
+    for (let i = 0; i < cols * 14; i++) ctx.fillText(Math.random() > .5 ? '1' : '0', Math.random() * innerWidth, Math.random() * innerHeight); }
+  else requestAnimationFrame(draw);
+
+  /* ---------- typing effect ---------- */
+  const phrases = ['Problem → POC → MVP → Production', 'AI agents · RAG · full-stack · cloud', 'Human in the loop. Always.'];
+  const el = $('#typed'); let p = 0, c = 0, del = false;
+  (function type() {
+    const s = phrases[p];
+    if (reduce) { el.textContent = s; return; }
+    el.textContent = s.slice(0, c);
+    if (!del && c === s.length) { del = true; return setTimeout(type, 1800); }
+    if (del && c === 0) { del = false; p = (p + 1) % phrases.length; }
+    c += del ? -1 : 1;
+    setTimeout(type, del ? 25 : 55);
+  })();
+
+  /* ---------- sections: reveal, nav highlight, progress dots ---------- */
+  const secs = $$('.snap');
+  const dots = $('#dots');
+  secs.forEach((s) => { const a = document.createElement('a'); a.href = '#' + s.id; a.title = s.dataset.label; a.setAttribute('aria-label', s.dataset.label); dots.appendChild(a); });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      e.target.classList.toggle('in', e.isIntersecting);
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        $$('#dots a').forEach((a) => a.classList.toggle('active', a.hash === '#' + id));
+        $$('.navlink').forEach((a) => a.classList.toggle('active', a.hash === '#' + id));
+      }
+    });
+  }, { threshold: 0.35 });
+  secs.forEach((s) => io.observe(s));
+
+  /* ---------- mobile menu ---------- */
+  const mb = $('#menuBtn'), menu = $('#menu');
+  mb.addEventListener('click', () => { const open = menu.classList.toggle('hidden') === false; mb.setAttribute('aria-expanded', open); });
+  $$('#menu a').forEach((a) => a.addEventListener('click', () => menu.classList.add('hidden')));
+
+  /* ---------- keyboard: ↑/↓ or PageUp/PageDown jump a screen ---------- */
+  addEventListener('keydown', (e) => {
+    if (!['ArrowDown', 'ArrowUp'].includes(e.key) || e.metaKey || e.ctrlKey) return;
+    const i = secs.findIndex((s) => s.classList.contains('in'));
+    const n = secs[i + (e.key === 'ArrowDown' ? 1 : -1)];
+    if (n) { e.preventDefault(); n.scrollIntoView({ behavior: 'smooth' }); }
+  });
+
+  $('#year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
