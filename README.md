@@ -17,7 +17,7 @@ All text, links, experience and projects live in [`src/data.js`](src/data.js).
 
 A separate full-screen slide deck — *From Problems to Products* — lives at `/My-Portfolio/deck/`
 (linked from the nav and hero). All slide copy is in [`src/deck/content.js`](src/deck/content.js).
-Navigate with ← →, Space, Home/End or 1–0; press **O** for the overview of all slides.
+Navigate with ← →, Space, Home/End or number keys; press **O** for the overview of all slides.
 
 ## Deploy to GitHub Pages
 

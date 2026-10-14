@@ -15,6 +15,7 @@ export const headers = [
   { id: 'solve', label: 'What Can I Solve?', headline: 'Different Problems. The Right Engineering Approach.' },
   { id: 'approach', label: 'How I Approach Problems', headline: 'Understand First. Engineer Second.' },
   { id: 'build', label: 'What Can I Build?', headline: 'From Intelligent Systems to Complete Products.' },
+  { id: 'evaluate', label: 'How I Evaluate AI', headline: 'Building AI Is Not the Hard Part. Proving It Works Is.' },
   { id: 'proof', label: 'Proof of Execution', headline: 'Not Just Capabilities. Products I’ve Worked On.' },
   { id: 'journey', label: 'From Idea to Production', headline: 'I Can Own the Engineering Journey.' },
   { id: 'depth', label: 'Engineering Depth', headline: 'Building Is One Thing. Building Reliably Is Another.' },
@@ -95,26 +96,36 @@ export const capabilities = [
   {
     title: 'AI Engineering',
     items: ['RAG & LLM applications', 'Agentic workflows', 'Document intelligence', 'Evaluation & guardrails'],
-    proof: { name: 'Multi-RAG · PodHealth', text: 'Multi-Model RAG that processes images, documents and handwritten notes.' },
   },
   {
     title: 'Product Engineering',
     items: ['Web & mobile apps', 'Backends & REST APIs', 'Dashboards & PWAs', 'Full-stack delivery'],
-    proof: { name: 'PodHealth & Banavo.ai', text: 'CRUD and surveys with real-time visualization on web and mobile; multi-source PWA dashboards.' },
   },
   {
     title: 'Cloud & DevOps',
     items: ['AWS', 'Docker', 'CI/CD', 'Deployments & infrastructure'],
-    proof: { name: 'NuePrism · Nuearcus', text: 'Runs on AWS EC2 with CI/CD pipelines and prompt and model versioning.' },
   },
   {
     title: 'System Engineering',
     items: ['Architecture', 'Database design', 'Debugging & optimization', 'Testing & integrations'],
-    proof: { name: 'NuePrism data layer', text: 'Supabase (PostgreSQL) data models fed by Jira and GitHub ingestion pipelines normalized into one schema.' },
   },
 ];
 
-// 06 — stage: 'shipped' | 'client' | 'pilot' | 'development'
+// 06 — pick the metric that matches what "correct" means for the task
+export const evalMetrics = [
+  { name: 'BLEU', measures: 'N-gram overlap between generated text and a reference.', useFor: 'Translation, summaries' },
+  { name: 'Perplexity', measures: 'How well a language model predicts text — lower is better.', useFor: 'Comparing models & fine-tunes' },
+  { name: 'F1 score', measures: 'The balance of precision and recall.', useFor: 'Classification, extraction, retrieval' },
+  { name: 'LLM-as-a-Judge', measures: 'An LLM grades answers against a rubric or expected result.', useFor: 'Open-ended answers, NL-to-SQL', featured: true },
+];
+export const nlToSqlEval = {
+  name: 'NL-to-SQL evaluation',
+  where: 'Banavo.ai',
+  method: 'LLM-as-a-Judge · pass / fail',
+  steps: ['Plain-English question', 'Agent writes SQL + answer', 'LLM judge vs. expected result', 'Pass / fail → accuracy'],
+};
+
+// 07 — stage: 'shipped' | 'client' | 'pilot' | 'development'
 export const caseStudies = [
   {
     name: 'NuePrism',
@@ -153,7 +164,7 @@ export const caseStudies = [
 
 export const stageLabels = { shipped: 'Shipped', client: 'Client project', pilot: 'Pilot', development: 'In development' };
 
-// 07
+// 08
 export const lifecycle = [
   { stage: 'Requirements', text: 'Goals, users, constraints' },
   { stage: 'Architecture', text: 'Components & trade-offs' },
@@ -165,7 +176,7 @@ export const lifecycle = [
   { stage: 'Iteration', text: 'Feedback into the next cycle' },
 ];
 
-// 08 — TODO: confirm each story's details against what actually happened
+// 09 — TODO: confirm each story's details against what actually happened
 export const depthTopics = ['Architecture', 'Scaling', 'Database performance', 'Reliability', 'Security', 'Observability', 'Cloud cost', 'Testing', 'Deployment'];
 export const stories = [
   {
@@ -190,7 +201,7 @@ export const stories = [
   },
 ];
 
-// 09
+// 10
 export const reasons = [
   { title: 'Product thinking', text: 'Understand business objectives before choosing technology.' },
   { title: 'Technical versatility', text: 'Work across AI, frontend, backend and infrastructure.' },

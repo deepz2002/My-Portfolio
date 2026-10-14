@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { profile } from '../data';
 import {
-  approachCriteria, approachOptions, approachSteps, capabilities, caseStudies, deck, depthTopics, headers,
-  lifecycle, pillars, problems, promiseFlow, reasons, stageLabels, stories,
+  approachCriteria, approachOptions, approachSteps, capabilities, caseStudies, deck, depthTopics, evalMetrics, headers,
+  lifecycle, nlToSqlEval, pillars, problems, promiseFlow, reasons, stageLabels, stories,
 } from './content';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -19,7 +19,8 @@ const Rise = ({ i = 0, as: Tag = 'div', className = '', style, ...props }) => (
   <Tag className={`rise ${className}`} style={{ '--i': i, ...style }} {...props} />
 );
 
-function Head({ n, children }) {
+function Head({ id, children }) {
+  const n = headers.findIndex((x) => x.id === id);
   const h = headers[n];
   return (
     <header>
@@ -84,7 +85,7 @@ function FlowNode({ k, label, last }) {
 function Who() {
   return (
     <>
-      <Head n={1} />
+      <Head id="who" />
       <div className="s-body g-who items-start">
         <Rise i={2} className="card idcard">
           <p className="s-label">Identity</p>
@@ -133,7 +134,7 @@ function Solve() {
   const p = problems[sel];
   return (
     <>
-      <Head n={2} />
+      <Head id="solve" />
       <div className="s-body g-solve">
         <Rise i={2} className="flex flex-col">
           <p className="s-label mb-[.7em]">Your problem — select one</p>
@@ -187,7 +188,7 @@ function Solve() {
 function Approach() {
   return (
     <>
-      <Head n={3} />
+      <Head id="approach" />
       <div className="s-body flex flex-col">
         <ol className="steps">
           {approachSteps.map((s, k) => (
@@ -221,41 +222,60 @@ function Approach() {
 
 // ---------- 05 ----------
 function Build() {
-  const [sel, setSel] = useState(0);
-  const c = capabilities[sel];
   return (
     <>
-      <Head n={4} />
+      <Head id="build" />
       <div className="s-body flex flex-col">
         <div className="pillars">
           {capabilities.map((x, k) => (
-            <Rise key={x.title} i={2 + k}>
-              <button aria-pressed={sel === k} onClick={() => setSel(k)} className="pick pillar-pick h-full">
-                <span className="mono muted text-[.72em]">{pad(k + 1)}</span>
-                <h3>{x.title}</h3>
-                <ul>{x.items.map((it) => <li key={it}>{it}</li>)}</ul>
-                <span className="more">{sel === k ? 'proof point ↓' : 'see proof →'}</span>
-              </button>
+            <Rise key={x.title} i={2 + k} className="card pillar-card">
+              <span className="mono muted text-[.72em]">{pad(k + 1)}</span>
+              <h3>{x.title}</h3>
+              <ul>{x.items.map((it) => <li key={it}>{it}</li>)}</ul>
             </Rise>
           ))}
         </div>
-
-        <Rise i={6} className="mt-auto pt-[1.1em]" aria-live="polite">
-          <div key={sel} className="card panel-in flex flex-wrap items-center gap-x-[2em] gap-y-[.6em] p-[1.05em_1.5em]"
-            style={{ borderColor: 'color-mix(in srgb, var(--accent) 45%, transparent)' }}>
-            <div className="min-w-[12em] flex-none">
-              <p className="s-label">Proof point · {c.title}</p>
-              <p className="mt-[.35em] font-semibold">{c.proof.name}</p>
-            </div>
-            <p className="muted flex-1 basis-[20em] text-[.92em] leading-relaxed">{c.proof.text}</p>
-          </div>
-        </Rise>
+        <Rise i={6} as="p" className="loop !mt-auto pt-[1.4em]">AI is one layer — I build the product, platform and system around it</Rise>
       </div>
     </>
   );
 }
 
 // ---------- 06 ----------
+function Evaluate() {
+  return (
+    <>
+      <Head id="evaluate">
+        <Rise as="p" i={2} className="s-lead mt-[.6em]">
+          Anyone can wire up an LLM. The engineering is measuring whether it&apos;s right — not eyeballing it.
+        </Rise>
+      </Head>
+      <div className="s-body flex flex-col">
+        <div className="metrics">
+          {evalMetrics.map((m, k) => (
+            <Rise key={m.name} i={3 + k} className={`card metric ${m.featured ? 'featured' : ''}`}>
+              <h3>{m.name}</h3>
+              <p className="mt-[.5em]">{m.measures}</p>
+              <p className="muted mt-[.6em] text-[.9em]"><span className="s-label">Use for</span> {m.useFor}</p>
+            </Rise>
+          ))}
+        </div>
+
+        <Rise i={8} className="card applied mt-auto">
+          <div className="flex flex-wrap items-baseline justify-between gap-[.6em]">
+            <p className="s-label">Applied · {nlToSqlEval.name} · {nlToSqlEval.where}</p>
+            <p className="mono text-[.72em]" style={{ color: 'var(--accent)' }}>{nlToSqlEval.method}</p>
+          </div>
+          <ol className="eval-flow">
+            {nlToSqlEval.steps.map((st, k) => <li key={st}><span className="mono muted">{k + 1}</span>{st}</li>)}
+          </ol>
+        </Rise>
+      </div>
+    </>
+  );
+}
+
+// ---------- 07 ----------
 function Proof() {
   const [sel, setSel, onKeyDown] = useTabs(caseStudies.length);
   const c = caseStudies[sel];
@@ -270,7 +290,7 @@ function Proof() {
 
   return (
     <>
-      <Head n={5} />
+      <Head id="proof" />
       <div className="s-body g-proof">
         <Rise i={2} className="flex flex-col gap-[.6em]">
           <div role="tablist" aria-label="Case studies" aria-orientation="vertical" onKeyDown={onKeyDown} className="grid gap-[.6em]">
@@ -319,11 +339,11 @@ function Proof() {
   );
 }
 
-// ---------- 07 ----------
+// ---------- 08 ----------
 function Journey() {
   return (
     <>
-      <Head n={6} />
+      <Head id="journey" />
       <div className="s-body flex flex-col">
         <ol className="track">
           {lifecycle.map((s, k) => (
@@ -357,13 +377,13 @@ function Journey() {
   );
 }
 
-// ---------- 08 ----------
+// ---------- 09 ----------
 function Depth() {
   const [sel, setSel] = useState(0);
   const s = stories[sel];
   return (
     <>
-      <Head n={7} />
+      <Head id="depth" />
       <div className="s-body flex flex-col">
         <Rise i={2} className="flex flex-wrap gap-[.4em]">
           {depthTopics.map((t) => <span key={t} className="pill">{t}</span>)}
@@ -395,11 +415,11 @@ function Depth() {
   );
 }
 
-// ---------- 09 ----------
+// ---------- 10 ----------
 function Why() {
   return (
     <>
-      <Head n={8} />
+      <Head id="why" />
       <div className="s-body g-why">
         <ul>
           {reasons.map((r, k) => (
@@ -421,13 +441,14 @@ function Why() {
   );
 }
 
-// ---------- 10 ----------
+// ---------- 11 ----------
 function Next() {
+  const last = headers[headers.length - 1];
   const mail = `mailto:${profile.email}?subject=${encodeURIComponent("Let's discuss a problem")}`;
   return (
     <div className="closing flex h-full flex-col items-center justify-center text-center">
-      <Rise as="p" className="s-eyebrow"><span className="num">10 —</span> {headers[9].label}</Rise>
-      <Rise as="h2" i={1} className="mt-[.4em] max-w-[14em]"><Headline text={headers[9].headline} /></Rise>
+      <Rise as="p" className="s-eyebrow"><span className="num">{pad(headers.length)} —</span> {last.label}</Rise>
+      <Rise as="h2" i={1} className="mt-[.4em] max-w-[14em]"><Headline text={last.headline} /></Rise>
       <Rise as="p" i={2} className="s-lead mx-auto mt-[1em] max-w-[36em]">
         Whether it&apos;s an idea that needs validation, a process that needs automation, an AI capability that needs engineering,
         or a product that needs to reach production — I&apos;m interested in solving meaningful problems and building solutions that work.
@@ -446,4 +467,4 @@ function Next() {
   );
 }
 
-export const SLIDES = [Opening, Who, Solve, Approach, Build, Proof, Journey, Depth, Why, Next];
+export const SLIDES = [Opening, Who, Solve, Approach, Build, Evaluate, Proof, Journey, Depth, Why, Next];

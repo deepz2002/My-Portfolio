@@ -141,12 +141,21 @@ html.deck-page body { background: var(--bg); }
 
 /* ---------- 05 build ---------- */
 .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1em; }
-.pillar-pick { padding: 1em 1.2em 1.1em; display: flex; flex-direction: column; gap: .4em; }
-.pillar-pick h3 { font-weight: 600; font-size: 1.1em; }
-.pillar-pick ul { margin-top: .5em; display: grid; gap: .35em; font-size: .82em; color: var(--muted); }
-.pillar-pick li::before { content: "▸ "; color: var(--accent); }
-.pillar-pick .more { margin-top: auto; padding-top: .8em; font-family: var(--font-mono); font-size: .7em; color: var(--muted); }
-.pillar-pick[aria-pressed="true"] .more { color: var(--accent); }
+.pillar-card { padding: 1.2em 1.25em 1.4em; display: flex; flex-direction: column; gap: .4em; }
+.pillar-card h3 { font-weight: 600; font-size: 1.15em; }
+.pillar-card ul { margin-top: .6em; display: grid; gap: .45em; font-size: .85em; color: var(--muted); }
+.pillar-card li::before { content: "▸ "; color: var(--accent); }
+
+/* ---------- 06 evaluate ---------- */
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: .9em; }
+.metric { padding: 1em 1.15em 1.1em; font-size: .9em; line-height: 1.4; }
+.metric h3 { font-family: var(--font-mono); font-weight: 700; font-size: 1.15em; color: var(--accent); }
+.metric.featured { border-color: var(--accent); background: linear-gradient(160deg, var(--glow), transparent 75%), color-mix(in srgb, var(--bg) 55%, transparent); }
+.applied { padding: 1.05em 1.4em 1.1em; margin-top: auto; border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.eval-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7em; margin-top: .8em; }
+.eval-flow li { position: relative; display: flex; gap: .6em; align-items: baseline; font-size: .85em; line-height: 1.35;
+  padding: .65em .8em; border-radius: .6em; background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.eval-flow li:not(:last-child)::after { content: "→"; position: absolute; right: -.75em; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: .85em; }
 
 /* ---------- 06 proof ---------- */
 .case-pick { padding: .85em 1.1em; display: grid; gap: .3em; }
@@ -222,7 +231,10 @@ html.deck-page body { background: var(--bg); }
   .g-who, .g-solve, .g-proof, .g-why, .g-approach { grid-template-columns: 1fr; gap: 1.4em; }
   .steps { grid-template-columns: repeat(2, 1fr); }
   .stepcard::after { display: none; }
-  .pillars { grid-template-columns: 1fr 1fr; }
+  .pillars, .metrics { grid-template-columns: 1fr 1fr; }
+  .eval-flow { grid-template-columns: 1fr; }
+  .eval-flow li::after { display: none; }
+  .applied { margin-top: 1.4em; }
   .flow { flex-direction: column; align-items: stretch; gap: .4em; }
   .flow-node { flex-direction: row; width: auto; text-align: left; }
   .flow-line { display: none; }
@@ -236,7 +248,7 @@ html.deck-page body { background: var(--bg); }
   .case dd { border-top: 0; padding-top: .2em; }
   .chain .down { margin-left: 1em; }
 }
-@media (max-width: 420px) { .pillars, .steps { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .pillars, .steps, .metrics { grid-template-columns: 1fr; } }
 
 @media (prefers-reduced-motion: reduce) {
   .slide.enter-next, .slide.enter-prev, .slide .rise, .panel-in, .overview { animation: none; }
