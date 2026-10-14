@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" class="dark deck-page">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>From Problems to Products — Deepak A</title>
+    <meta name="description" content="Engineering capability deck — Deepak A. You bring the problem; I bring the engineering to turn it into a working product." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23070b08'/><text x='4' y='22' font-family='monospace' font-size='16' fill='%2300ff9c'>&gt;_</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+      // set theme before paint to avoid a flash
+      try {
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.classList.toggle('dark', t === 'dark');
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/deck/main.jsx"></script>
+  </body>
+</html>

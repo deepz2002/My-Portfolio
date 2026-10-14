@@ -105,23 +105,23 @@ export const experience = [
         url: 'https://banavo.ai/',
         about: 'AI-visibility platform for e-commerce brands.',
         points: [
-          'Interactive multi-metric analytics dashboards (Net Sales, ROAS, AOV, funnels, anomaly detection) with Tremor + Plotly over an SSE streaming backend.',
+          'Interactive multi-metric analytics dashboards (Net Sales, ROAS, AOV, funnels, anomaly detection) combining multiple data sources, with Tremor + Plotly over an SSE streaming backend.',
           'NL-to-SQL agent on AWS Athena — non-technical users ask questions in plain English and get charts, tables and summaries.',
           'LLM evaluation framework using LLM-as-a-Judge to score responses pass/fail for systematic QA of AI outputs.',
           'ChatGPT-style conversational interface with editable query history and multi-turn context.',
-          'Fully responsive mobile views across the dashboard and chat experience.',
+          'Fully responsive design across the dashboard and chat experience, installable as a PWA.',
         ],
-        stack: ['React', 'Tremor', 'Plotly', 'FastAPI', 'SSE', 'AWS Athena', 'LLM-as-a-Judge'],
+        stack: ['React', 'PWA', 'Tremor', 'Plotly', 'FastAPI', 'SSE', 'AWS Athena', 'LLM-as-a-Judge'],
       },
       {
         name: 'PodHealth',
         type: 'Client',
         url: 'https://podhealth.ai/',
         about: 'AI platform for neurology & psychiatry clinics.',
-        // TODO: add the specific features you built for PodHealth
         points: [
-          'AI engineering for a clinical-care platform supporting neurology and psychiatry practices.',
-          'Multi-Model RAG reasoning over text and image inputs for document intelligence.',
+          'Full CRUD operations across the web and mobile apps.',
+          'Survey-taking flows with real-time visualization of responses on mobile and web.',
+          'Multi-Model RAG that processes images, documents and handwritten notes.',
         ],
         stack: ['Python', 'FastAPI', 'MRAG', 'LLMs'],
       },
@@ -198,7 +198,7 @@ export const clients = [
   { name: 'Nuearcus', note: 'Founding AI Engineer · NuePrism', url: 'https://www.nuearcus.com/nueprism/' },
   { name: 'Atlassian Marketplace', note: 'NuePrism published', url: 'https://www.nuearcus.com/nueprism/' },
   { name: 'Banavo.ai', note: 'Dashboards · NL-to-SQL · LLM evals', url: 'https://banavo.ai/' },
-  { name: 'PodHealth', note: 'Healthcare AI', url: 'https://podhealth.ai/' },
+  { name: 'PodHealth', note: 'Web + mobile apps · Multi-RAG', url: 'https://podhealth.ai/' },
   { name: '4good.ai', note: 'Test Automation Agents · MarketingGPT', url: null },
   { name: 'BNMIT', note: 'B.E. AI & ML, 2020–2024', url: null },
 ];

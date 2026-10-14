@@ -11,6 +11,8 @@ const LINKS = [
 ];
 // sections that count as "Experience" for nav highlighting
 const GROUP = { '4good': 'nuearcus' };
+// separate page: the capability deck
+const DECK = `${import.meta.env.BASE_URL}deck/`;
 
 export default function Nav({ active, theme, onToggleTheme }) {
   const [open, setOpen] = useState(false);
@@ -24,6 +26,7 @@ export default function Nav({ active, theme, onToggleTheme }) {
           {LINKS.map(([id, label]) => (
             <a key={id} href={`#${id}`} className={`navlink ${current === id ? 'active' : ''}`}>{label}</a>
           ))}
+          <a href={DECK} className="navlink rounded-md border border-[var(--accent)] px-2.5 py-1 !text-[var(--accent)] hover:bg-[var(--glow)]">Deck ▸</a>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={onToggleTheme} className="chip py-1.5 hover:border-[var(--accent)]" aria-label="Toggle color theme">
@@ -39,6 +42,7 @@ export default function Nav({ active, theme, onToggleTheme }) {
           {LINKS.map(([id, label]) => (
             <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="chip py-2 text-center text-sm">{label}</a>
           ))}
+          <a href={DECK} className="chip col-span-2 border-[var(--accent)] py-2 text-center text-sm accent">Capability Deck ▸</a>
         </div>
       )}
     </header>

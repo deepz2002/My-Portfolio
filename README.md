@@ -13,6 +13,12 @@ npm run dev        # http://localhost:5173/My-Portfolio/
 
 All text, links, experience and projects live in [`src/data.js`](src/data.js).
 
+## Capability deck
+
+A separate full-screen slide deck — *From Problems to Products* — lives at `/My-Portfolio/deck/`
+(linked from the nav and hero). All slide copy is in [`src/deck/content.js`](src/deck/content.js).
+Navigate with ← →, Space, Home/End or 1–0; press **O** for the overview of all slides.
+
 ## Deploy to GitHub Pages
 
 1. Push to `main` on `github.com/deepz2002/My-Portfolio`.

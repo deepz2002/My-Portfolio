@@ -40,6 +40,7 @@ export default function Hero({ onActive }) {
           <R as="p" d={0.35} className="muted mt-5 max-w-xl">{profile.intro}</R>
           <R d={0.45} className="mt-8 flex flex-wrap gap-3">
             <a href="#projects" className="btn solid">Explore Projects →</a>
+            <a href={`${import.meta.env.BASE_URL}deck/`} className="btn">Capability Deck ▸</a>
             <a href="#nuearcus" className="btn">Experience</a>
             <a href={profile.linkedin} target="_blank" rel="noreferrer" className="btn">LinkedIn ↗</a>
           </R>
